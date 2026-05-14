@@ -1,81 +1,268 @@
-PhonePe MERN Clone (Backend Only)
-A simple, easy-to-understand Backend for a PhonePe clone project. This system is heavily commented and uses beginner-friendly architectures while simulating a real-world FinTech application environment.
+# PhonePe Clone - Backend
 
-🌟 Full Feature Set
-User Authentication: Strict JWT-based Register and Login system.
-Dynamic UPI IDs: Newly registered users automatically receive a unique UPI tag (e.g., saurabh354@phonepe).
-Strict MPIN System: All outbound transactions mathematically enforce a robust 4-digit MPIN verification layer.
-Flexible Peer-to-Peer Transfers: Send money directly to users by entering either their 10-digit Phone Number OR their assigned UPI ID.
-Wallet Top-Up: Simulate direct bank transfers by adding test deposits into a user's wallet via the Top-up route.
-Utility Bill Payments: Mock endpoints for recharging Mobile Data or paying Electricity Bills. Recharges natively deduct wallet bounds while logging specialized BILL_PAY histories.
-Detailed Transaction Records: See all history of deposits, withdrawals, utility bills, and friend transfers mapped recursively to the user logged in.
-Swagger User Interface: A complete webpage auto-generating readable tables for all your available endpoints.
-Interactive Postman Library: Complete endpoint repository fully equipped with auto-saving Environment token scripting out-of-the-box!
-🛠 Tech Stack Used
-NodeJS & ExpressJS Framework
-MongoDB Memory System with Mongoose ORM
-BcryptJS (Password & MPIN ciphering)
-JSONWebToken (Session Validation)
-Swagger-UI (Auto Documentations)
-🚀 Getting Started
-1. Install Dependencies
-Run the command below in the main folder where package.json is located.
+A Node.js/Express backend implementation of a digital payment system similar to PhonePe. This project includes user authentication, wallet management, and transaction processing.
 
+## Features
+
+- **User Authentication**: Register and login with email/phone
+- **JWT-based Authorization**: Secure token-based authentication
+- **Wallet Management**: Manage user balance and transaction history
+- **Money Transfer**: Send money between users using UPI IDs
+- **MPIN Security**: Set and verify MPIN for transactions
+- **Transaction History**: View all transaction records
+- **Swagger Documentation**: Auto-generated API documentation
+
+## Tech Stack
+
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB ODM
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **Swagger** - API documentation
+- **CORS** - Cross-origin resource sharing
+- **dotenv** - Environment configuration
+
+## Installation
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- MongoDB (local or Atlas)
+- npm or yarn
+
+### Steps
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/AARAMBH12/Phonepe-clone-Backend.git
+cd phonepeclone
+```
+
+2. **Install dependencies**
+
+```bash
 npm install
-2. Configure Environment Variables
-Inside your root folder, please ensure you have an .env file containing this strict outline:
+```
 
-PORT=5000
-MONGODB_URI=mongodb://127.0.0.1:27017/phonepe-clone
-JWT_SECRET=super_secret_key_change_in_production
-(If you're deploying this or using Mongo Atlas, swap out mongodb://127.0.0.1:27017/phonepe-clone with your cloud URI connection string)
+3. **Create `.env` file** in the root directory:
 
-3. Generate Swagger Document
-Refresh the static UI configurations mapping to your local ports by executing:
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/phonepe-BE-system-DEV
+JWT_SECRET=your_jwt_secret_key_HHD,DDNDVMDFDFK,VNMDBDCNDSBDJCDCBDSscdddcjj
+```
 
-npm run swagger
-4. Seed Dummy Data (Highly Recommended)
-We recommend loading our starter pack database so you don't have to repeatedly register fake accounts! Run:
+4. **Start the server**
 
-npm run seed
-What gets seeded?
+```bash
+npm run dev
+```
 
-amit@example.com (Phone: 9876543210 | UPI: amit123@phonepe | Bal: 5000)
-priya@example.com (Phone: 9876543211 | UPI: priya456@phonepe | Bal: 3000)
-rahul@example.com (Phone: 9876543212 | UPI: rahul789@phonepe | Bal: 1500)
-neha@example.com (Phone: 9876543213 | UPI: neha012@phonepe | Bal: 8000)
-Global Credentials For these seeded accounts:
+The server will run on `http://localhost:3000`
 
-Password: password123
-MPIN: 1234
-5. Run the Server
-Use one of the terminal triggers:
+## API Endpoints
 
-Production mode: npm start
-Development mode (Auto Restarts when editing): npm run dev
-Your backend ecosystem will permanently boot at http://localhost:5000.
+### Authentication Routes (`/api/auth`)
 
-📖 Available API Endpoints Summary
-Auth Routes (/api/auth)
-POST /register: Registers a user, hashes password, grants a randomized UPI string.
-POST /login: Validates password and issues the Bearer Token.
-GET /profile: Safely returns user context and checks if hasMpinSet is activated.
-POST /setup-mpin: Updates the system with a secured 4-digit PIN hash block. (Requires Bearer Token)
-Transaction & P2P Routes (/api/transactions)
-POST /send: Send real test funds. Takes { receiverIdentifier, amount, mpin }. (receiverIdentifier can be standard phone digits OR a UPI block like amit123@phonepe). (Requires Bearer Token)
-GET /history: Dumps a historical JSON array isolating everything categorized under standard TRANSFERs and Bills mapped to standard dates. (Requires Bearer Token)
-Wallet & Utilities Routes (/api/wallet)
-POST /add-money: Loads {amount} numbers into the active user’s wallet securely. Maps an ADD_MONEY label on histories. (Requires Bearer Token)
-POST /pay-bill: Simulates external interactions by taking {billerName, amount, mpin} parameters reducing available floats. Maps under BILL_PAY. (Requires Bearer Token)
-🔍 Interacting With Your API
-View Swagger Web Pages
-Easily check what headers and schemas the models expect via your localhost URL: http://localhost:5000/api-docs
+#### Register User
 
-Connecting POSTMAN (Automated Testing)
-Boot Postman Software.
-Delete previous iterations of this project if present.
-Click on the gray Import Box.
-Supply the provided file: postman_collection.json.
-Open the 1. Authentication folder and fire the Login User template.
-Look closely at Postman's "Tests" Scripting block. It catches your active Login and invisibly injects the secret Token string back into the local environment setup named {{token}}.
-Because of this logic, you do not ever need to copy/paste Bearer configurations! You can immediately fire Top-ups, Money Requests, and Bill Pays. Let Postman handle the permissions for you out of the box!
+```
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "9876543210",
+  "password": "password123"
+}
+```
+
+#### Login
+
+```
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+#### Get Profile
+
+```
+GET /api/auth/profile
+Authorization: Bearer <JWT_TOKEN>
+```
+
+#### Setup MPIN
+
+```
+POST /api/auth/set-mpin
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+{
+  "mpin": "1234"
+}
+```
+
+### Transaction Routes (`/api/transactions`)
+
+#### Send Money
+
+```
+POST /api/transactions/send
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+{
+  "receiverUpi": "john954@phonepe",
+  "amount": 500,
+  "mpin": "1234",
+  "description": "Payment for lunch"
+}
+```
+
+#### Get Transaction History
+
+```
+GET /api/transactions/history
+Authorization: Bearer <JWT_TOKEN>
+```
+
+## Project Structure
+
+```
+phonepeclone/
+├── src/
+│   ├── config/
+│   │   └── db.js              # MongoDB connection
+│   ├── controllers/
+│   │   ├── authController.js  # Auth logic
+│   │   └── transactionController.js # Transaction logic
+│   ├── models/
+│   │   ├── User.js            # User schema
+│   │   └── Transaction.js     # Transaction schema
+│   ├── middlewares/
+│   │   └── authMiddleware.js  # JWT verification
+│   └── routes/
+│       ├── authRoutes.js      # Auth endpoints
+│       └── transactionRoutes.js # Transaction endpoints
+├── server.js                  # Express app setup
+├── swagger.js                 # Swagger config
+├── package.json               # Dependencies
+└── .env                       # Environment variables
+```
+
+## Usage Example
+
+### 1. Register a new user
+
+```bash
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Alice",
+    "email": "alice@example.com",
+    "phone": "9876543210",
+    "password": "securepass123"
+  }'
+```
+
+### 2. Login
+
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "alice@example.com",
+    "password": "securepass123"
+  }'
+```
+
+### 3. Setup MPIN
+
+```bash
+curl -X POST http://localhost:3000/api/auth/set-mpin \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "mpin": "1234"
+  }'
+```
+
+### 4. Send Money
+
+```bash
+curl -X POST http://localhost:3000/api/transactions/send \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "receiverUpi": "receiver_upi@phonepe",
+    "amount": 100,
+    "mpin": "1234",
+    "description": "Payment"
+  }'
+```
+
+## API Documentation
+
+Access Swagger documentation at:
+
+```
+http://localhost:3000/api-docs
+```
+
+## Database Models
+
+### User Schema
+
+- `name`: String (required)
+- `email`: String (required, unique)
+- `phone`: String (required, unique)
+- `password`: String (required, hashed)
+- `upiId`: String (unique, auto-generated)
+- `mpin`: String (hashed)
+- `balance`: Number (default: 1000)
+- `timestamps`: createdAt, updatedAt
+
+### Transaction Schema
+
+- `sender`: ObjectId (reference to User)
+- `receiver`: ObjectId (reference to User)
+- `amount`: Number (required)
+- `type`: String (TRANSFER, ADD_MONEY, WITHDRAW, BILL_PAY)
+- `status`: String (SUCCESS, FAILED, PENDING)
+- `description`: String
+- `timestamps`: createdAt, updatedAt
+
+## Security Features
+
+- **Password Hashing**: Passwords are hashed using bcryptjs with salt rounds
+- **MPIN Protection**: MPIN is hashed and verified before transactions
+- **JWT Authentication**: Secure token-based authorization
+- **CORS**: Cross-origin requests are controlled
+- **Environment Variables**: Sensitive data stored in `.env`
+
+## Error Handling
+
+The API returns appropriate HTTP status codes:
+
+- `200`: Success
+- `201`: Created
+- `400`: Bad Request
+- `401`: Unauthorized
+- `404`: Not Found
+- `500`: Server Error
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit pull requests.
+
+
